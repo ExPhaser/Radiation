@@ -12,6 +12,11 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
   private _body: Phaser.Physics.Arcade.Body;
   private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private _spacebar: Phaser.Input.Keyboard.Key;
+  private _w: Phaser.Input.Keyboard.Key;
+  private _d: Phaser.Input.Keyboard.Key;
+  private _a: Phaser.Input.Keyboard.Key;
+  private _canDubleJump :boolean =false;
+
   private _direction: string;
   private CurrentWeapon: string = "The_Jailor";
   public IsUsingWeapon: boolean = false;
@@ -35,6 +40,7 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
     //settiamo la variabile in modo da poter accedere a tutte le propery del body
     this._body = <Phaser.Physics.Arcade.Body>this.body;
     //aggiungiamo questo gameobject alla scena
+    this.setName("player")
     this._scene.add.existing(this);
     
     /*this._scene.input.on('pointerdown', (pointer:any) =>{
@@ -69,6 +75,9 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
     this._cursors = this._scene.input.keyboard.createCursorKeys();
     //inizializziamo la SPACE KEY 
     this._spacebar = this._scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this._w = this._scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this._d = this._scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this._a = this._scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
     //creiamo l'animazione di pausa
     let _animation = {
@@ -99,7 +108,7 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
     this.setDepth(11);
 
   }
-
+  
   //questo metodo serve nel collider per avere accesso alle proprità del body per fare dei controlli 
   getBody(): Phaser.Physics.Arcade.Body { return this._body }
 
@@ -137,19 +146,22 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
 
     }
 
-
+    const didPressJump= Phaser.Input.Keyboard.JustDown(this._w);
     //se il tasto cursore up è premuto ed il player è a contatto con il pavimento
-    if (this._cursors.up.isDown && this._body.blocked.down) {
-      //effettua il play dell'animazione
-      this.anims.play('idle', true);
-      //setta la velocità y in modo da far saltare il player
-      this._body.setVelocityY(-550);
+   if(didPressJump){
+     if(this._body.onFloor()){
+       this._canDubleJump=true;
+       this._body.setVelocityY(-550);
+     }else if(this._canDubleJump){
+       this._canDubleJump=false;
+       this._body.setVelocityY(-550);
 
-    }
+     }
+   }
 
 
     //se il il cursore sinistro è premuto
-    if (this._cursors.left.isDown) {
+    if (this._a.isDown) {
       //gira il PLAYER nella posizione iniziale, quella definina nello spritesheet
       this.setFlipX(false);
       //effettual il play dell'animazione
@@ -162,7 +174,7 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
     }
 
     //se il il cursore destro è premuto
-    else if (this._cursors.right.isDown) {
+    else if (this._d.isDown) {
       //gira il PLAYER in direzione opposta da quella definina nello spritesheet
       this.setFlipX(true);
       //effettual il play dell'animazione
@@ -181,9 +193,8 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
       this.anims.play('idle', true);
       //setta la direction a NONE
       this._direction = "none";
-
+      
     }
-
 
   }
 
