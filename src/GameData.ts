@@ -166,6 +166,8 @@ export let GameData: any = {
     { name: "nuke", path: "assets/images/nuke.png" },
     { name: "bg3", path: "assets/images/bg3.png" },
     { name: "bg_over", path: "assets/images/bg_over.png" }
+    { name: "background_win", path: "assets/images/background_win.png"},
+    { name: "logo_win", path: "assets/images/logo_win.png"},
 
     // Bosses
     { name: "Patient_Zero", path: "assets/images/PZ.png" },
