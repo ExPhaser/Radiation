@@ -163,11 +163,8 @@ export let GameData: any = {
     { name: "greenbots", path: "assets/images/greenbots.png" },
     { name: "cubes", path: "assets/images/cubes.png" },
     { name: "trasparenza", path: "assets/images/trasparenza.png" },
-    { name: "bg-0", path: "assets/images/bg-0.png" },
-    { name: "bg-1", path: "assets/images/bg-1.png" },
-    { name: "bg-2", path: "assets/images/bg-2.png" },
-    { name: "bg-3", path: "assets/images/bg-3.png" },
-    { name: "bg-3", path: "assets/images/bg-3.png" },
+    { name: "nuke", path: "assets/images/nuke.png" },
+    { name: "bg3", path: "assets/images/bg3.png" }
 
     // Bosses
     { name: "Patient_Zero", path: "assets/images/PZ.png" },
