@@ -1,6 +1,7 @@
 export default class Win extends Phaser.Scene {
 
-  private _Win: Phaser.GameObjects.BitmapText;
+  private _cubes: Phaser.GameObjects.TileSprite;
+  private _Win: Phaser.GameObjects.Image;
   private _intro: Phaser.GameObjects.BitmapText;
   private _restart: Phaser.GameObjects.BitmapText;
 
@@ -11,11 +12,15 @@ export default class Win extends Phaser.Scene {
   }
 
   create() {
+
+
     localStorage.removeItem("score");
     localStorage.removeItem("lives");
     localStorage.removeItem("bestLevel");
     this.cameras.main.setBackgroundColor("#000000");
     let particles = this.add.particles('flares');
+
+    this._cubes = this.add.tileSprite(0, 0, 1024, 600, "background_win").setOrigin(0);
 
     particles.createEmitter({
       frame: 'blue',
@@ -27,15 +32,18 @@ export default class Win extends Phaser.Scene {
       quantity: 1
     });
 
-    this._Win = this.add
-      .bitmapText(this.game.canvas.width / 2, 65, "arcade", "GAME COMPLETED", 60)
-      .setAlpha(1)
-      .setOrigin(0)
-      .setDepth(1001)
-      .setOrigin(0.5).setTint(0xffffff);
+    this._Win = this.add.image(this.game.canvas.width / 2, 1, "logo_win").setAlpha(0);
+    this.add.tween({
+      targets: this._Win, y:190, alpha:1, duration: 1000, ease: "quad.easeInOut",
+      onComplete:() => {
+        this.add.tween({
+              targets: this._Win, y:170, repeat: -1, yoyo: true, duration: 1000, ease:"quad.easeInOut",
+          });
+        }
+      });
 
     this.add
-      .bitmapText(this.game.canvas.width / 2, 165, "arcade", "YOUR SCORE:" + this.registry.get("score"), 30)
+      .bitmapText(this.game.canvas.width / 2, 300, "arcade", "YOUR SCORE:" + this.registry.get("score"), 30)
       .setAlpha(1)
       .setOrigin(0)
       .setDepth(1001)
@@ -68,13 +76,5 @@ export default class Win extends Phaser.Scene {
 
     this.scene.stop("GameOver");
     this.scene.start("Intro");
-
-
-
   }
-
-
-
-
-
 }
